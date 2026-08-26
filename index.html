@@ -17,9 +17,6 @@
     />
 
     <style>
-      /* ============================================================
-         Reset & base
-         ============================================================ */
       html, body { height: 100%; }
       html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
@@ -37,14 +34,12 @@
         position: relative;
       }
 
-      /* Kill blue tap highlights on every interactive element */
       a, button, [role="button"], input, select, textarea, label,
       summary, .download-btn, .nav-link, .feature-pill {
         -webkit-tap-highlight-color: transparent;
         -webkit-touch-callout: none;
       }
 
-      /* Custom focus ring (no default blue) */
       a:focus, button:focus, .download-btn:focus { outline: none; }
       a:focus-visible, button:focus-visible, .download-btn:focus-visible {
         outline: 2px solid rgba(139, 92, 246, 0.6);
@@ -54,7 +49,6 @@
 
       ::selection { background: rgba(139, 92, 246, 0.4); color: #fff; }
 
-      /* Scrollbar */
       ::-webkit-scrollbar { width: 10px; height: 10px; }
       ::-webkit-scrollbar-track { background: #0a0a0f; }
       ::-webkit-scrollbar-thumb {
@@ -63,9 +57,6 @@
       }
       ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.16); }
 
-      /* ============================================================
-         Design tokens
-         ============================================================ */
       :root {
         --bg: #0a0a0f;
         --bg-elev: #11111a;
@@ -100,9 +91,6 @@
         --shadow-glow-pink: 0 20px 60px -20px rgba(236, 72, 153, 0.55);
       }
 
-      /* ============================================================
-         Background — animated mesh + grid
-         ============================================================ */
       .bg-mesh {
         position: fixed;
         inset: 0;
@@ -166,9 +154,6 @@
         .orb { animation: none; }
       }
 
-      /* ============================================================
-         Layout
-         ============================================================ */
       .page {
         max-width: 1200px;
         margin: 0 auto;
@@ -179,9 +164,6 @@
         .page { padding: 20px 18px 40px; }
       }
 
-      /* ============================================================
-         Nav
-         ============================================================ */
       .nav {
         display: flex;
         align-items: center;
@@ -255,9 +237,6 @@
         .nav-status .status-text { display: none; }
       }
 
-      /* ============================================================
-         Hero
-         ============================================================ */
       .hero {
         text-align: center;
         padding: 80px 12px 56px;
@@ -367,9 +346,6 @@
         .stat { padding: 14px 8px; }
       }
 
-      /* ============================================================
-         Apps grid
-         ============================================================ */
       .apps {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -628,9 +604,6 @@
         .btn-text .btn-title { font-size: 15px; }
       }
 
-      /* ============================================================
-         Footer
-         ============================================================ */
       .footer {
         margin-top: 72px;
         padding: 26px 22px;
@@ -672,9 +645,6 @@
         .footer { flex-direction: column; align-items: flex-start; }
       }
 
-      /* ============================================================
-         Reveal animation
-         ============================================================ */
       .reveal {
         opacity: 0;
         transform: translateY(18px);
@@ -690,31 +660,28 @@
       @media (prefers-reduced-motion: reduce) {
         .reveal { opacity: 1; transform: none; animation: none; }
       }
+
+      /* Diagnostic banner — only shows if an apk 404s */
+      .diag-banner {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+        max-width: 92vw;
+        background: #1c1024;
+        border: 1px solid rgba(244, 63, 94, 0.4);
+        color: #fecaca;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12.5px;
+        padding: 12px 16px;
+        border-radius: 12px;
+        box-shadow: 0 12px 30px -8px rgba(0,0,0,0.6);
+      }
+      .diag-banner.show { display: block; }
     </style>
-    <script data-arena-recording="true">(function(){
-"use strict";
-var SK="__arena_rec",RRWEB_CDN="https://cdn.jsdelivr.net/npm/rrweb@2.0.0-alpha.4/dist/rrweb.min.js";
-var MAX_RECORDING_MS=600000,MAX_RRWEB_EVENTS=30000,MAX_INTERACTIONS=5000,MAX_CURSOR_POINTS=10000,recStopped=false;
-var stored=null;try{var raw=sessionStorage.getItem(SK);if(raw)stored=JSON.parse(raw);}catch(ex){}
-var meta=stored?stored.m||null:null,rrwebEvents=stored?stored.r||[]:[],rrwebStarted=false,startTime=stored?stored.st||Date.now():Date.now();
-var interactions=stored?stored.i||[]:[],cursorPath=stored?stored.c||[]:[],lastCursorSample=0,lastScrollSample=0;
-var pageHeight=document.documentElement.scrollHeight;
-var viewport={width:window.innerWidth,height:window.innerHeight};
-function isCapped(){if(recStopped)return true;if(Date.now()-startTime>=MAX_RECORDING_MS){recStopped=true;return true;}return false;}
-function persist(){try{var d=JSON.stringify({r:rrwebEvents,i:interactions,c:cursorPath,m:meta,st:startTime});sessionStorage.setItem(SK,d);}catch(ex){rrwebEvents=rrwebEvents.slice(Math.floor(rrwebEvents.length/2));try{sessionStorage.setItem(SK,JSON.stringify({r:rrwebEvents,i:interactions,c:cursorPath,m:meta,st:startTime}));}catch(ex2){}}}
-setInterval(persist,5000);
-window.addEventListener("resize",function(){viewport={width:window.innerWidth,height:window.innerHeight};pageHeight=document.documentElement.scrollHeight;});
-document.addEventListener("click",function(e){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;var el=e.target;var tag=el.tagName?el.tagName.toLowerCase():"";var text=(el.textContent||"").trim().substring(0,80);var classes=el.className&&typeof el.className==="string"?el.className.substring(0,120):"";interactions.push({type:"click",t:Date.now()-startTime,x:Math.round(e.clientX),y:Math.round(e.clientY),element:{tag:tag,text:text,classes:classes}});},true);
-window.addEventListener("scroll",function(){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;var now=Date.now();if(now-lastScrollSample<200)return;lastScrollSample=now;var scrollY=Math.round(window.scrollY||window.pageYOffset||0);var depthPct=pageHeight>viewport.height?Math.min(100,Math.round(((scrollY+viewport.height)/pageHeight)*100)):100;interactions.push({type:"scroll",t:now-startTime,y:scrollY,depth_pct:depthPct});},{passive:true});
-document.addEventListener("mousemove",function(e){if(isCapped()||cursorPath.length>=MAX_CURSOR_POINTS)return;var now=Date.now();if(now-lastCursorSample<250)return;lastCursorSample=now;cursorPath.push([Math.round(e.clientX),Math.round(e.clientY),now-startTime]);},{passive:true});
-document.addEventListener("keydown",function(e){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;interactions.push({type:"keydown",t:Date.now()-startTime,key:e.key});},true);
-function buildAnalytics(){if(!meta)return null;var ph=document.documentElement.scrollHeight;var maxScroll=0,clickElements={},firstClick=null,firstScroll=null,totalDistance=0;for(var i=0;i<interactions.length;i++){var ev=interactions[i];if(ev.type==="scroll"){if(ev.depth_pct>maxScroll)maxScroll=ev.depth_pct;if(!firstScroll)firstScroll=ev.t;}if(ev.type==="click"){if(!firstClick)firstClick=ev.t;var key=ev.element.tag+":"+ev.element.text.substring(0,30);clickElements[key]=true;}}for(var j=1;j<cursorPath.length;j++){var dx=cursorPath[j][0]-cursorPath[j-1][0];var dy=cursorPath[j][1]-cursorPath[j-1][1];totalDistance+=Math.sqrt(dx*dx+dy*dy);}var duration=Date.now()-startTime;var clickHeatmap=[];for(var k=0;k<interactions.length;k++){if(interactions[k].type==="click")clickHeatmap.push([interactions[k].x,interactions[k].y]);}return{generation_id:meta.generationId,tournament_id:meta.tournamentId,started_at:new Date(startTime).toISOString(),ended_at:new Date().toISOString(),duration_ms:duration,viewport:viewport,page_height:ph,interactions:interactions,cursor_path:cursorPath,click_heatmap:clickHeatmap,summary:{total_clicks:clickHeatmap.length,total_scrolls:interactions.filter(function(e){return e.type==="scroll";}).length,max_scroll_depth_pct:maxScroll,unique_elements_clicked:Object.keys(clickElements).length,time_to_first_click_ms:firstClick,time_to_first_scroll_ms:firstScroll,cursor_distance_px:Math.round(totalDistance),active_time_ms:duration}};}
-function loadRrweb(){if(rrwebStarted)return;rrwebStarted=true;var s=document.createElement("script");s.src=RRWEB_CDN;s.onload=function(){var rec=(window.rrweb&&window.rrweb.record)||window.rrwebRecord;if(!rec)return;rec({emit:function(event){if(rrwebEvents.length>=MAX_RRWEB_EVENTS||isCapped())return;rrwebEvents.push(event);}});};s.onerror=function(){};document.head.appendChild(s);}
-window.addEventListener("message",function(e){if(!e.data||typeof e.data.type!=="string")return;if(e.data.type==="arena:init"){if(!meta)startTime=Date.now();meta={generationId:e.data.generationId||e.data.modelId,tournamentId:e.data.tournamentId};persist();loadRrweb();if(e.source)e.source.postMessage({type:"arena:init-ack",generationId:meta.generationId},"*");}if(e.data.type==="arena:flush"){var resp={type:"arena:recording-data",generationId:meta?meta.generationId:null,rrwebEvents:rrwebEvents,analytics:buildAnalytics()};try{sessionStorage.removeItem(SK);}catch(ex){}if(e.source)e.source.postMessage(resp,"*");}});
-loadRrweb();
-})();</script>
-  <script data-arena-views="true">(function(){var isTop=false;try{isTop=window.self===window.top;}catch(e){}if(!isTop)return;window.__ARENA_META={generationId:"glm-5.3",tournamentId:"c4016bd3-13ab-4cfa-988c-a2ee62c42db4"};var payload={tournamentId:"c4016bd3-13ab-4cfa-988c-a2ee62c42db4",modelId:"glm-5.3"};try{var r=document.referrer;if(r){var u=new URL(r);payload.referrerDomain=u.hostname;}}catch(e){}try{var vid=null;try{vid=localStorage.getItem('arena_vid');}catch(e){}if(!vid){vid=typeof crypto!=="undefined"&&crypto.randomUUID?crypto.randomUUID():(Date.now().toString(36)+Math.random().toString(36).slice(2)).slice(0,32);try{localStorage.setItem('arena_vid',vid);}catch(e){}}if(vid)payload.viewerId=vid;}catch(e){}try{fetch("https://www.designarena.ai/api/agon/page-views",{"method":"POST","headers":{"Content-Type":"application/json"},"body":JSON.stringify(payload),"keepalive":true});}catch(e){}})();</script>
-</head>
+  </head>
 
   <body>
     <!-- Background layers -->
@@ -723,6 +690,8 @@ loadRrweb();
     <div class="orb orb-1" aria-hidden="true"></div>
     <div class="orb orb-2" aria-hidden="true"></div>
     <div class="orb orb-3" aria-hidden="true"></div>
+
+    <div class="diag-banner" id="diagBanner"></div>
 
     <div class="page">
       <!-- ============ NAV ============ -->
@@ -788,7 +757,6 @@ loadRrweb();
 
           <div class="card-header">
             <div class="app-icon app-icon--xcluice" aria-hidden="true">
-              <!-- Chat bubble + upload arrow -->
               <svg width="42" height="42" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 18C12 14.6863 14.6863 12 18 12H46C49.3137 12 52 14.6863 52 18V38C52 41.3137 49.3137 44 46 44H30L20 52V44H18C14.6863 44 12 41.3137 12 38V18Z" fill="white" fill-opacity="0.97"/>
                 <path d="M32 22V36M32 22L25.5 28.5M32 22L38.5 28.5" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
@@ -822,7 +790,7 @@ loadRrweb();
             <span class="feature-pill">Reactions</span>
           </div>
 
-          <a class="download-btn download-btn--primary" href="xcluice.apk" download="xcluice.apk" aria-label="Download Xcluice APK (5.0 MB)">
+          <a class="download-btn download-btn--primary" href="xcluice.apk" download="xcluice.apk" data-apk="xcluice.apk" aria-label="Download Xcluice APK (5.0 MB)">
             <span class="btn-text">
               <span class="btn-title">Download Xcluice</span>
               <span class="btn-sub">xcluice.apk · 5.0 MB</span>
@@ -842,12 +810,10 @@ loadRrweb();
 
           <div class="card-header">
             <div class="app-icon app-icon--vestiare" aria-hidden="true">
-              <!-- Hanger + AI sparkle -->
               <svg width="42" height="42" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M32 14C30.3431 14 29 15.3431 29 17C29 18.6569 30.3431 20 32 20C33.6569 20 35 18.6569 35 17C35 15.3431 33.6569 14 32 14Z" fill="white"/>
                 <path d="M32 20V26" stroke="white" stroke-width="2.6" stroke-linecap="round"/>
                 <path d="M32 26L12 42C10.5 43.2 11.2 45.5 13 45.5H51C52.8 45.5 53.5 43.2 52 42L32 26Z" stroke="white" stroke-width="2.6" stroke-linejoin="round" fill="rgba(255,255,255,0.16)"/>
-                <!-- AI sparkles -->
                 <path d="M48 14L49.2 17.6L52.8 18.8L49.2 20L48 23.6L46.8 20L43.2 18.8L46.8 17.6L48 14Z" fill="#fde68a"/>
                 <path d="M52 26L52.6 27.7L54.3 28.3L52.6 28.9L52 30.6L51.4 28.9L49.7 28.3L51.4 27.7L52 26Z" fill="#fde68a" opacity="0.85"/>
               </svg>
@@ -879,7 +845,7 @@ loadRrweb();
             <span class="feature-pill">Color match</span>
           </div>
 
-          <a class="download-btn download-btn--fashion" href="vestiare.apk" download="vestiare.apk" aria-label="Download Vestiare APK (5.0 MB)">
+          <a class="download-btn download-btn--fashion" href="vestiare.apk" download="vestiare.apk" data-apk="vestiare.apk" aria-label="Download Vestiare APK (5.0 MB)">
             <span class="btn-text">
               <span class="btn-title">Download Vestiare</span>
               <span class="btn-sub">vestiare.apk · 5.0 MB</span>
@@ -905,5 +871,65 @@ loadRrweb();
         </div>
       </footer>
     </div>
+
+    <script>
+      // Diagnostic: before following a download link, verify the file actually
+      // exists next to this HTML file. If it 404s, show exactly why instead
+      // of failing silently.
+      (function () {
+        var banner = document.getElementById('diagBanner');
+
+        function showDiag(msg) {
+          banner.textContent = msg;
+          banner.classList.add('show');
+          setTimeout(function () { banner.classList.remove('show'); }, 6000);
+        }
+
+        document.querySelectorAll('a[data-apk]').forEach(function (link) {
+          link.addEventListener('click', function (e) {
+            var file = link.getAttribute('data-apk');
+
+            // file:// protocol: download attribute + fetch checks are unreliable,
+            // browsers often just navigate instead of downloading.
+            if (location.protocol === 'file:') {
+              showDiag(
+                'Opened via file:// — browsers often ignore the download ' +
+                'attribute here. Serve this folder with a local server ' +
+                '(e.g. "python3 -m http.server") and open it via ' +
+                'http://localhost, then try again.'
+              );
+              // let the click continue; some browsers will still handle it
+              return;
+            }
+
+            e.preventDefault();
+            fetch(file, { method: 'HEAD' })
+              .then(function (res) {
+                if (res.ok) {
+                  // File exists — trigger the real download.
+                  var a = document.createElement('a');
+                  a.href = file;
+                  a.download = file;
+                  document.body.appendChild(a);
+                  a.click();
+                  a.remove();
+                } else {
+                  showDiag(
+                    '"' + file + '" returned HTTP ' + res.status +
+                    '. Check it sits in the same folder as this HTML file ' +
+                    'and the filename matches exactly (case-sensitive): ' + file
+                  );
+                }
+              })
+              .catch(function () {
+                showDiag(
+                  'Could not reach "' + file + '". Make sure it is uploaded ' +
+                  'to the same folder as this HTML file on your server.'
+                );
+              });
+          });
+        });
+      })();
+    </script>
   </body>
 </html>
