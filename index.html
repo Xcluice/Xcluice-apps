@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0a0f" />
+    <meta name="description" content="Apps by Xcluice — Download Xcluice (chat & upload) and Vestiare (AI fashion specialist) for Android." />
+    <title>Apps by Xcluice — Dashboard</title>
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%238b5cf6'/><stop offset='1' stop-color='%2306b6d4'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23g)'/><text x='50' y='70' text-anchor='middle' font-family='system-ui,sans-serif' font-size='58' font-weight='800' fill='white'>X</text></svg>" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ============================================================
+         Reset & base
+         ============================================================ */
+      html, body { height: 100%; }
+      html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+      body {
+        margin: 0;
+        font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #e7e7ea;
+        background: #0a0a0f;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+        min-height: 100vh;
+        position: relative;
+      }
+
+      /* Kill blue tap highlights on every interactive element */
+      a, button, [role="button"], input, select, textarea, label,
+      summary, .download-btn, .nav-link, .feature-pill {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+      }
+
+      /* Custom focus ring (no default blue) */
+      a:focus, button:focus, .download-btn:focus { outline: none; }
+      a:focus-visible, button:focus-visible, .download-btn:focus-visible {
+        outline: 2px solid rgba(139, 92, 246, 0.6);
+        outline-offset: 3px;
+        border-radius: 14px;
+      }
+
+      ::selection { background: rgba(139, 92, 246, 0.4); color: #fff; }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar { width: 10px; height: 10px; }
+      ::-webkit-scrollbar-track { background: #0a0a0f; }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.16); }
+
+      /* ============================================================
+         Design tokens
+         ============================================================ */
+      :root {
+        --bg: #0a0a0f;
+        --bg-elev: #11111a;
+        --surface: rgba(255, 255, 255, 0.035);
+        --surface-2: rgba(255, 255, 255, 0.06);
+        --border: rgba(255, 255, 255, 0.08);
+        --border-strong: rgba(255, 255, 255, 0.14);
+        --text: #f4f4f5;
+        --text-muted: #a1a1aa;
+        --text-dim: #71717a;
+
+        --violet: #8b5cf6;
+        --violet-2: #a78bfa;
+        --cyan: #06b6d4;
+        --cyan-2: #22d3ee;
+        --pink: #ec4899;
+        --amber: #fbbf24;
+
+        --grad-xcluice: linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #06b6d4 100%);
+        --grad-vestiare: linear-gradient(135deg, #ec4899 0%, #f43f5e 50%, #f59e0b 100%);
+        --grad-text: linear-gradient(120deg, #c4b5fd 0%, #67e8f9 50%, #fbcfe8 100%);
+
+        --radius-sm: 10px;
+        --radius-md: 16px;
+        --radius-lg: 22px;
+        --radius-xl: 28px;
+
+        --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+        --shadow-md: 0 10px 30px -10px rgba(0,0,0,0.6);
+        --shadow-lg: 0 25px 60px -15px rgba(0,0,0,0.7);
+        --shadow-glow-violet: 0 20px 60px -20px rgba(139, 92, 246, 0.55);
+        --shadow-glow-pink: 0 20px 60px -20px rgba(236, 72, 153, 0.55);
+      }
+
+      /* ============================================================
+         Background — animated mesh + grid
+         ============================================================ */
+      .bg-mesh {
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        background:
+          radial-gradient(ellipse 80% 60% at 20% 0%, rgba(139, 92, 246, 0.22), transparent 60%),
+          radial-gradient(ellipse 70% 60% at 80% 10%, rgba(6, 182, 212, 0.18), transparent 60%),
+          radial-gradient(ellipse 60% 50% at 50% 100%, rgba(236, 72, 153, 0.18), transparent 60%),
+          linear-gradient(180deg, #07070c 0%, #0a0a0f 50%, #07070c 100%);
+      }
+
+      .bg-grid {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background-image:
+          linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+        background-size: 56px 56px;
+        mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, #000 30%, transparent 80%);
+        -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, #000 30%, transparent 80%);
+        pointer-events: none;
+      }
+
+      .orb {
+        position: fixed;
+        z-index: -1;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.5;
+        pointer-events: none;
+        animation: float 22s ease-in-out infinite;
+      }
+      .orb-1 {
+        top: -120px; left: -120px;
+        width: 480px; height: 480px;
+        background: radial-gradient(circle, #8b5cf6 0%, transparent 70%);
+      }
+      .orb-2 {
+        top: 40%; right: -180px;
+        width: 520px; height: 520px;
+        background: radial-gradient(circle, #06b6d4 0%, transparent 70%);
+        animation-delay: -7s;
+        animation-duration: 28s;
+      }
+      .orb-3 {
+        bottom: -180px; left: 30%;
+        width: 560px; height: 560px;
+        background: radial-gradient(circle, #ec4899 0%, transparent 70%);
+        animation-delay: -14s;
+        animation-duration: 32s;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33%      { transform: translate(40px, -30px) scale(1.05); }
+        66%      { transform: translate(-30px, 40px) scale(0.97); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .orb { animation: none; }
+      }
+
+      /* ============================================================
+         Layout
+         ============================================================ */
+      .page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 28px 28px 56px;
+      }
+
+      @media (max-width: 640px) {
+        .page { padding: 20px 18px 40px; }
+      }
+
+      /* ============================================================
+         Nav
+         ============================================================ */
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 18px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        backdrop-filter: blur(20px) saturate(140%);
+        -webkit-backdrop-filter: blur(20px) saturate(140%);
+        position: sticky;
+        top: 16px;
+        z-index: 10;
+      }
+
+      .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: var(--grad-xcluice);
+        display: grid;
+        place-items: center;
+        box-shadow: 0 6px 20px -6px rgba(139, 92, 246, 0.6);
+        position: relative;
+        overflow: hidden;
+      }
+      .brand-mark::after {
+        content: "";
+        position: absolute; inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.35), transparent 50%);
+      }
+      .brand-mark svg { position: relative; z-index: 1; }
+
+      .brand-text {
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: -0.01em;
+        color: var(--text);
+      }
+      .brand-text .accent { color: var(--violet-2); }
+
+      .nav-status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        color: var(--text-muted);
+        font-family: 'JetBrains Mono', monospace;
+      }
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #22c55e;
+        box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18), 0 0 12px rgba(34, 197, 94, 0.6);
+        animation: pulse 2.2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%, 100% { box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18), 0 0 12px rgba(34, 197, 94, 0.6); }
+        50%      { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0.05), 0 0 16px rgba(34, 197, 94, 0.8); }
+      }
+
+      @media (max-width: 520px) {
+        .nav-status .status-text { display: none; }
+      }
+
+      /* ============================================================
+         Hero
+         ============================================================ */
+      .hero {
+        text-align: center;
+        padding: 80px 12px 56px;
+        position: relative;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 16px;
+        background: rgba(139, 92, 246, 0.08);
+        border: 1px solid rgba(139, 92, 246, 0.25);
+        border-radius: 999px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        font-weight: 500;
+        color: #c4b5fd;
+        letter-spacing: 0.04em;
+        margin-bottom: 28px;
+        backdrop-filter: blur(10px);
+      }
+      .hero-badge .badge-dot {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--violet-2);
+        box-shadow: 0 0 8px var(--violet-2);
+      }
+
+      .hero-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: clamp(48px, 8vw, 96px);
+        line-height: 1.02;
+        font-weight: 700;
+        letter-spacing: -0.04em;
+        margin: 0 0 22px;
+        color: var(--text);
+      }
+
+      .gradient-text {
+        background: var(--grad-text);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        position: relative;
+        display: inline-block;
+      }
+
+      .hero-subtitle {
+        font-size: clamp(16px, 1.6vw, 19px);
+        color: var(--text-muted);
+        max-width: 640px;
+        margin: 0 auto 44px;
+        line-height: 1.65;
+      }
+
+      .hero-stats {
+        display: inline-flex;
+        align-items: center;
+        gap: 0;
+        padding: 18px 8px;
+        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        backdrop-filter: blur(16px);
+        flex-wrap: nowrap;
+      }
+
+      .stat {
+        padding: 4px 28px;
+        text-align: center;
+        min-width: 110px;
+      }
+      .stat-value {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+      }
+      .stat-value span {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-dim);
+        margin-left: 3px;
+        letter-spacing: 0;
+      }
+      .stat-label {
+        font-size: 11px;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        margin-top: 6px;
+        font-weight: 500;
+      }
+      .stat-divider {
+        width: 1px;
+        height: 36px;
+        background: var(--border);
+      }
+
+      @media (max-width: 720px) {
+        .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 8px; }
+        .stat-divider { display: none; }
+        .stat { padding: 14px 8px; }
+      }
+
+      /* ============================================================
+         Apps grid
+         ============================================================ */
+      .apps {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+        margin-top: 16px;
+      }
+
+      @media (max-width: 860px) {
+        .apps { grid-template-columns: 1fr; }
+      }
+
+      .app-card {
+        position: relative;
+        padding: 30px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        backdrop-filter: blur(24px) saturate(150%);
+        -webkit-backdrop-filter: blur(24px) saturate(150%);
+        overflow: hidden;
+        transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+                    border-color 0.4s ease,
+                    box-shadow 0.4s ease;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .app-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent 40%, transparent 60%, rgba(255,255,255,0.06));
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+                mask-composite: exclude;
+        pointer-events: none;
+        opacity: 0.6;
+      }
+
+      .app-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--border-strong);
+      }
+      .app-card--xcluice:hover { box-shadow: var(--shadow-glow-violet); }
+      .app-card--vestiare:hover { box-shadow: var(--shadow-glow-pink); }
+
+      .card-glow {
+        position: absolute;
+        top: -120px;
+        right: -120px;
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.35;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+      }
+      .app-card--xcluice .card-glow { background: var(--violet); }
+      .app-card--vestiare .card-glow { background: var(--pink); }
+      .app-card:hover .card-glow { opacity: 0.55; }
+
+      .card-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 22px;
+        position: relative;
+      }
+
+      .app-icon {
+        width: 76px;
+        height: 76px;
+        border-radius: 22px;
+        display: grid;
+        place-items: center;
+        box-shadow: 0 14px 30px -10px rgba(0,0,0,0.6);
+        position: relative;
+        overflow: hidden;
+      }
+      .app-icon::after {
+        content: "";
+        position: absolute; inset: 0;
+        background: linear-gradient(160deg, rgba(255,255,255,0.3) 0%, transparent 45%);
+        pointer-events: none;
+      }
+      .app-icon svg { position: relative; z-index: 1; }
+
+      .app-icon--xcluice { background: var(--grad-xcluice); }
+      .app-icon--vestiare { background: var(--grad-vestiare); }
+
+      .app-meta {
+        text-align: right;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: var(--text-dim);
+        letter-spacing: 0.04em;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-end;
+      }
+      .app-version {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 10px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        color: var(--text-muted);
+        font-size: 11px;
+      }
+      .version-dot {
+        width: 3px; height: 3px;
+        border-radius: 50%;
+        background: var(--text-dim);
+      }
+
+      .app-name {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 36px;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+        margin: 0 0 4px;
+        color: var(--text);
+        line-height: 1.1;
+        position: relative;
+      }
+
+      .app-tagline {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--violet-2);
+        margin: 0 0 18px;
+        letter-spacing: -0.005em;
+      }
+      .app-card--vestiare .app-tagline { color: #f9a8d4; }
+
+      .app-description {
+        font-size: 14.5px;
+        color: var(--text-muted);
+        line-height: 1.65;
+        margin: 0 0 22px;
+        max-width: 52ch;
+      }
+
+      .app-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 28px;
+      }
+      .feature-pill {
+        font-size: 12px;
+        font-weight: 500;
+        padding: 7px 13px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        color: var(--text-muted);
+        transition: all 0.2s ease;
+      }
+      .feature-pill:hover {
+        background: rgba(255, 255, 255, 0.07);
+        color: var(--text);
+        border-color: var(--border-strong);
+      }
+
+      .download-btn {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 16px 20px;
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        color: #fff;
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 600;
+        font-size: 16px;
+        letter-spacing: -0.005em;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        border: none;
+        transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+                    box-shadow 0.3s ease;
+        isolation: isolate;
+      }
+      .download-btn::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        transition: filter 0.3s ease;
+      }
+      .download-btn--primary::before { background: var(--grad-xcluice); }
+      .download-btn--fashion::before { background: var(--grad-vestiare); }
+
+      .download-btn::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: linear-gradient(160deg, rgba(255,255,255,0.22), transparent 50%);
+        opacity: 0.7;
+        pointer-events: none;
+      }
+
+      .download-btn:hover {
+        transform: translateY(-2px) scale(1.01);
+      }
+      .download-btn--primary:hover { box-shadow: 0 14px 40px -10px rgba(139, 92, 246, 0.7); }
+      .download-btn--fashion:hover { box-shadow: 0 14px 40px -10px rgba(236, 72, 153, 0.7); }
+      .download-btn:active { transform: translateY(0) scale(0.99); }
+
+      .btn-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        line-height: 1.1;
+      }
+      .btn-text .btn-title { font-size: 16px; font-weight: 600; }
+      .btn-text .btn-sub {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.75);
+        letter-spacing: 0.04em;
+      }
+
+      .btn-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.18);
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        backdrop-filter: blur(6px);
+      }
+
+      @media (max-width: 480px) {
+        .app-card { padding: 24px; }
+        .app-name { font-size: 30px; }
+        .app-icon { width: 64px; height: 64px; border-radius: 18px; }
+        .app-icon svg { width: 38px; height: 38px; }
+        .download-btn { padding: 14px 16px; }
+        .btn-text .btn-title { font-size: 15px; }
+      }
+
+      /* ============================================================
+         Footer
+         ============================================================ */
+      .footer {
+        margin-top: 72px;
+        padding: 26px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        border-top: 1px solid var(--border);
+        color: var(--text-dim);
+        font-size: 13px;
+      }
+      .footer-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .footer-left .mono {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--text-dim);
+      }
+      .footer-right {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+      }
+      .footer-right .chip {
+        padding: 4px 10px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        color: var(--text-muted);
+      }
+
+      @media (max-width: 520px) {
+        .footer { flex-direction: column; align-items: flex-start; }
+      }
+
+      /* ============================================================
+         Reveal animation
+         ============================================================ */
+      .reveal {
+        opacity: 0;
+        transform: translateY(18px);
+        animation: revealUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      }
+      .reveal-1 { animation-delay: 0.05s; }
+      .reveal-2 { animation-delay: 0.18s; }
+      .reveal-3 { animation-delay: 0.32s; }
+      .reveal-4 { animation-delay: 0.46s; }
+      @keyframes revealUp {
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .reveal { opacity: 1; transform: none; animation: none; }
+      }
+    </style>
+    <script data-arena-recording="true">(function(){
+"use strict";
+var SK="__arena_rec",RRWEB_CDN="https://cdn.jsdelivr.net/npm/rrweb@2.0.0-alpha.4/dist/rrweb.min.js";
+var MAX_RECORDING_MS=600000,MAX_RRWEB_EVENTS=30000,MAX_INTERACTIONS=5000,MAX_CURSOR_POINTS=10000,recStopped=false;
+var stored=null;try{var raw=sessionStorage.getItem(SK);if(raw)stored=JSON.parse(raw);}catch(ex){}
+var meta=stored?stored.m||null:null,rrwebEvents=stored?stored.r||[]:[],rrwebStarted=false,startTime=stored?stored.st||Date.now():Date.now();
+var interactions=stored?stored.i||[]:[],cursorPath=stored?stored.c||[]:[],lastCursorSample=0,lastScrollSample=0;
+var pageHeight=document.documentElement.scrollHeight;
+var viewport={width:window.innerWidth,height:window.innerHeight};
+function isCapped(){if(recStopped)return true;if(Date.now()-startTime>=MAX_RECORDING_MS){recStopped=true;return true;}return false;}
+function persist(){try{var d=JSON.stringify({r:rrwebEvents,i:interactions,c:cursorPath,m:meta,st:startTime});sessionStorage.setItem(SK,d);}catch(ex){rrwebEvents=rrwebEvents.slice(Math.floor(rrwebEvents.length/2));try{sessionStorage.setItem(SK,JSON.stringify({r:rrwebEvents,i:interactions,c:cursorPath,m:meta,st:startTime}));}catch(ex2){}}}
+setInterval(persist,5000);
+window.addEventListener("resize",function(){viewport={width:window.innerWidth,height:window.innerHeight};pageHeight=document.documentElement.scrollHeight;});
+document.addEventListener("click",function(e){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;var el=e.target;var tag=el.tagName?el.tagName.toLowerCase():"";var text=(el.textContent||"").trim().substring(0,80);var classes=el.className&&typeof el.className==="string"?el.className.substring(0,120):"";interactions.push({type:"click",t:Date.now()-startTime,x:Math.round(e.clientX),y:Math.round(e.clientY),element:{tag:tag,text:text,classes:classes}});},true);
+window.addEventListener("scroll",function(){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;var now=Date.now();if(now-lastScrollSample<200)return;lastScrollSample=now;var scrollY=Math.round(window.scrollY||window.pageYOffset||0);var depthPct=pageHeight>viewport.height?Math.min(100,Math.round(((scrollY+viewport.height)/pageHeight)*100)):100;interactions.push({type:"scroll",t:now-startTime,y:scrollY,depth_pct:depthPct});},{passive:true});
+document.addEventListener("mousemove",function(e){if(isCapped()||cursorPath.length>=MAX_CURSOR_POINTS)return;var now=Date.now();if(now-lastCursorSample<250)return;lastCursorSample=now;cursorPath.push([Math.round(e.clientX),Math.round(e.clientY),now-startTime]);},{passive:true});
+document.addEventListener("keydown",function(e){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;interactions.push({type:"keydown",t:Date.now()-startTime,key:e.key});},true);
+function buildAnalytics(){if(!meta)return null;var ph=document.documentElement.scrollHeight;var maxScroll=0,clickElements={},firstClick=null,firstScroll=null,totalDistance=0;for(var i=0;i<interactions.length;i++){var ev=interactions[i];if(ev.type==="scroll"){if(ev.depth_pct>maxScroll)maxScroll=ev.depth_pct;if(!firstScroll)firstScroll=ev.t;}if(ev.type==="click"){if(!firstClick)firstClick=ev.t;var key=ev.element.tag+":"+ev.element.text.substring(0,30);clickElements[key]=true;}}for(var j=1;j<cursorPath.length;j++){var dx=cursorPath[j][0]-cursorPath[j-1][0];var dy=cursorPath[j][1]-cursorPath[j-1][1];totalDistance+=Math.sqrt(dx*dx+dy*dy);}var duration=Date.now()-startTime;var clickHeatmap=[];for(var k=0;k<interactions.length;k++){if(interactions[k].type==="click")clickHeatmap.push([interactions[k].x,interactions[k].y]);}return{generation_id:meta.generationId,tournament_id:meta.tournamentId,started_at:new Date(startTime).toISOString(),ended_at:new Date().toISOString(),duration_ms:duration,viewport:viewport,page_height:ph,interactions:interactions,cursor_path:cursorPath,click_heatmap:clickHeatmap,summary:{total_clicks:clickHeatmap.length,total_scrolls:interactions.filter(function(e){return e.type==="scroll";}).length,max_scroll_depth_pct:maxScroll,unique_elements_clicked:Object.keys(clickElements).length,time_to_first_click_ms:firstClick,time_to_first_scroll_ms:firstScroll,cursor_distance_px:Math.round(totalDistance),active_time_ms:duration}};}
+function loadRrweb(){if(rrwebStarted)return;rrwebStarted=true;var s=document.createElement("script");s.src=RRWEB_CDN;s.onload=function(){var rec=(window.rrweb&&window.rrweb.record)||window.rrwebRecord;if(!rec)return;rec({emit:function(event){if(rrwebEvents.length>=MAX_RRWEB_EVENTS||isCapped())return;rrwebEvents.push(event);}});};s.onerror=function(){};document.head.appendChild(s);}
+window.addEventListener("message",function(e){if(!e.data||typeof e.data.type!=="string")return;if(e.data.type==="arena:init"){if(!meta)startTime=Date.now();meta={generationId:e.data.generationId||e.data.modelId,tournamentId:e.data.tournamentId};persist();loadRrweb();if(e.source)e.source.postMessage({type:"arena:init-ack",generationId:meta.generationId},"*");}if(e.data.type==="arena:flush"){var resp={type:"arena:recording-data",generationId:meta?meta.generationId:null,rrwebEvents:rrwebEvents,analytics:buildAnalytics()};try{sessionStorage.removeItem(SK);}catch(ex){}if(e.source)e.source.postMessage(resp,"*");}});
+loadRrweb();
+})();</script>
+  <script data-arena-views="true">(function(){var isTop=false;try{isTop=window.self===window.top;}catch(e){}if(!isTop)return;window.__ARENA_META={generationId:"glm-5.3",tournamentId:"c4016bd3-13ab-4cfa-988c-a2ee62c42db4"};var payload={tournamentId:"c4016bd3-13ab-4cfa-988c-a2ee62c42db4",modelId:"glm-5.3"};try{var r=document.referrer;if(r){var u=new URL(r);payload.referrerDomain=u.hostname;}}catch(e){}try{var vid=null;try{vid=localStorage.getItem('arena_vid');}catch(e){}if(!vid){vid=typeof crypto!=="undefined"&&crypto.randomUUID?crypto.randomUUID():(Date.now().toString(36)+Math.random().toString(36).slice(2)).slice(0,32);try{localStorage.setItem('arena_vid',vid);}catch(e){}}if(vid)payload.viewerId=vid;}catch(e){}try{fetch("https://www.designarena.ai/api/agon/page-views",{"method":"POST","headers":{"Content-Type":"application/json"},"body":JSON.stringify(payload),"keepalive":true});}catch(e){}})();</script>
+</head>
+
+  <body>
+    <!-- Background layers -->
+    <div class="bg-mesh" aria-hidden="true"></div>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="orb orb-1" aria-hidden="true"></div>
+    <div class="orb orb-2" aria-hidden="true"></div>
+    <div class="orb orb-3" aria-hidden="true"></div>
+
+    <div class="page">
+      <!-- ============ NAV ============ -->
+      <nav class="nav reveal reveal-1" aria-label="Primary">
+        <a href="#" class="nav-brand" aria-label="Xcluice home" style="text-decoration:none; color:inherit;">
+          <span class="brand-mark" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 7C3 5.89543 3.89543 5 5 5H17C18.1046 5 19 5.89543 19 7V13C19 14.1046 18.1046 15 17 15H12L8 19V15H5C3.89543 15 3 14.1046 3 13V7Z" fill="white" fill-opacity="0.96"/>
+              <path d="M21 9V17C21 18.1046 20.1046 19 19 19H17.5L15 21V19" stroke="white" stroke-opacity="0.85" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="brand-text">Xcluice<span class="accent">.</span></span>
+        </a>
+        <div class="nav-status" aria-live="polite">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span class="status-text">All systems operational</span>
+        </div>
+      </nav>
+
+      <!-- ============ HERO ============ -->
+      <header class="hero reveal reveal-2">
+        <div class="hero-badge">
+          <span class="badge-dot" aria-hidden="true"></span>
+          <span>v2.4 · Updated this week</span>
+        </div>
+
+        <h1 class="hero-title">
+          Apps by <span class="gradient-text">Xcluice</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Two carefully crafted Android apps — one for effortless conversation and content sharing, one for an AI stylist in your pocket.
+        </p>
+
+        <div class="hero-stats" role="list">
+          <div class="stat" role="listitem">
+            <div class="stat-value">2</div>
+            <div class="stat-label">Apps</div>
+          </div>
+          <div class="stat-divider" aria-hidden="true"></div>
+          <div class="stat" role="listitem">
+            <div class="stat-value">10.0<span>MB</span></div>
+            <div class="stat-label">Total size</div>
+          </div>
+          <div class="stat-divider" aria-hidden="true"></div>
+          <div class="stat" role="listitem">
+            <div class="stat-value">8.0<span>+</span></div>
+            <div class="stat-label">Android</div>
+          </div>
+          <div class="stat-divider" aria-hidden="true"></div>
+          <div class="stat" role="listitem">
+            <div class="stat-value">Free</div>
+            <div class="stat-label">Forever</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ============ APPS ============ -->
+      <main class="apps" aria-label="Available apps">
+        <!-- ========== Xcluice ========== -->
+        <article class="app-card app-card--xcluice reveal reveal-3" aria-labelledby="xcluice-name">
+          <div class="card-glow" aria-hidden="true"></div>
+
+          <div class="card-header">
+            <div class="app-icon app-icon--xcluice" aria-hidden="true">
+              <!-- Chat bubble + upload arrow -->
+              <svg width="42" height="42" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 18C12 14.6863 14.6863 12 18 12H46C49.3137 12 52 14.6863 52 18V38C52 41.3137 49.3137 44 46 44H30L20 52V44H18C14.6863 44 12 41.3137 12 38V18Z" fill="white" fill-opacity="0.97"/>
+                <path d="M32 22V36M32 22L25.5 28.5M32 22L38.5 28.5" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="32" cy="36" r="1.6" fill="#7c3aed"/>
+              </svg>
+            </div>
+            <div class="app-meta">
+              <span class="app-version">
+                <span>v1.8.2</span>
+                <span class="version-dot" aria-hidden="true"></span>
+                <span>5.0 MB</span>
+              </span>
+              <span class="app-version">
+                <span>Android 8.0+</span>
+              </span>
+            </div>
+          </div>
+
+          <h2 id="xcluice-name" class="app-name">Xcluice</h2>
+          <p class="app-tagline">Chat. Share. Upload. Anywhere.</p>
+
+          <p class="app-description">
+            A modern messaging app built for fluid conversations and effortless content sharing. Drop in photos, videos, files, and links — Xcluice keeps everything organized and one tap away.
+          </p>
+
+          <div class="app-features">
+            <span class="feature-pill">Real-time chat</span>
+            <span class="feature-pill">File uploads</span>
+            <span class="feature-pill">Cloud sync</span>
+            <span class="feature-pill">E2E encrypted</span>
+            <span class="feature-pill">Reactions</span>
+          </div>
+
+          <a class="download-btn download-btn--primary" href="xcluice.apk" download="xcluice.apk" aria-label="Download Xcluice APK (5.0 MB)">
+            <span class="btn-text">
+              <span class="btn-title">Download Xcluice</span>
+              <span class="btn-sub">xcluice.apk · 5.0 MB</span>
+            </span>
+            <span class="btn-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 4V16M12 16L7 11M12 16L17 11" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M4 20H20" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </a>
+        </article>
+
+        <!-- ========== Vestiare ========== -->
+        <article class="app-card app-card--vestiare reveal reveal-4" aria-labelledby="vestiare-name">
+          <div class="card-glow" aria-hidden="true"></div>
+
+          <div class="card-header">
+            <div class="app-icon app-icon--vestiare" aria-hidden="true">
+              <!-- Hanger + AI sparkle -->
+              <svg width="42" height="42" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32 14C30.3431 14 29 15.3431 29 17C29 18.6569 30.3431 20 32 20C33.6569 20 35 18.6569 35 17C35 15.3431 33.6569 14 32 14Z" fill="white"/>
+                <path d="M32 20V26" stroke="white" stroke-width="2.6" stroke-linecap="round"/>
+                <path d="M32 26L12 42C10.5 43.2 11.2 45.5 13 45.5H51C52.8 45.5 53.5 43.2 52 42L32 26Z" stroke="white" stroke-width="2.6" stroke-linejoin="round" fill="rgba(255,255,255,0.16)"/>
+                <!-- AI sparkles -->
+                <path d="M48 14L49.2 17.6L52.8 18.8L49.2 20L48 23.6L46.8 20L43.2 18.8L46.8 17.6L48 14Z" fill="#fde68a"/>
+                <path d="M52 26L52.6 27.7L54.3 28.3L52.6 28.9L52 30.6L51.4 28.9L49.7 28.3L51.4 27.7L52 26Z" fill="#fde68a" opacity="0.85"/>
+              </svg>
+            </div>
+            <div class="app-meta">
+              <span class="app-version">
+                <span>v2.1.0</span>
+                <span class="version-dot" aria-hidden="true"></span>
+                <span>5.0 MB</span>
+              </span>
+              <span class="app-version">
+                <span>Android 8.0+</span>
+              </span>
+            </div>
+          </div>
+
+          <h2 id="vestiare-name" class="app-name">Vestiare</h2>
+          <p class="app-tagline">Your AI fashion specialist.</p>
+
+          <p class="app-description">
+            An intelligent wardrobe assistant that learns your taste. Get personalized outfit recommendations, trend insights, and style advice powered by a fashion-trained AI model — anytime, anywhere.
+          </p>
+
+          <div class="app-features">
+            <span class="feature-pill">AI stylist</span>
+            <span class="feature-pill">Trend analysis</span>
+            <span class="feature-pill">Outfit picks</span>
+            <span class="feature-pill">Wardrobe plan</span>
+            <span class="feature-pill">Color match</span>
+          </div>
+
+          <a class="download-btn download-btn--fashion" href="vestiare.apk" download="vestiare.apk" aria-label="Download Vestiare APK (5.0 MB)">
+            <span class="btn-text">
+              <span class="btn-title">Download Vestiare</span>
+              <span class="btn-sub">vestiare.apk · 5.0 MB</span>
+            </span>
+            <span class="btn-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 4V16M12 16L7 11M12 16L17 11" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M4 20H20" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </a>
+        </article>
+      </main>
+
+      <!-- ============ FOOTER ============ -->
+      <footer class="footer reveal reveal-4">
+        <div class="footer-left">
+          <span class="mono">© 2025 Xcluice Labs</span>
+        </div>
+        <div class="footer-right">
+          <span class="chip">SHA-256 verified</span>
+          <span class="chip">No tracking</span>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
